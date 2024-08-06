@@ -1,0 +1,20 @@
+[2024-08-06 12:53:47] local.ERROR: There are no commands defined in the "octane" namespace. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\NamespaceNotFoundException(code: 0): There are no commands defined in the \"octane\" namespace. at /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php:669)
+[stacktrace]
+#0 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php(720): Symfony\\Component\\Console\\Application->findNamespace()
+#1 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php(266): Symfony\\Component\\Console\\Application->find()
+#2 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+#3 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+#4 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+#5 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#6 {main}
+"} 
+[2024-08-06 12:53:57] local.ERROR: There are no commands defined in the "octane" namespace. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\NamespaceNotFoundException(code: 0): There are no commands defined in the \"octane\" namespace. at /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php:669)
+[stacktrace]
+#0 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php(720): Symfony\\Component\\Console\\Application->findNamespace()
+#1 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php(266): Symfony\\Component\\Console\\Application->find()
+#2 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+#3 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+#4 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+#5 /home/amit/Documents/DOA Admin/DOAWEB_ADMIN_backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#6 {main}
+"} 
