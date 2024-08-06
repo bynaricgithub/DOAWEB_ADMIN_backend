@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doaadmin-deployment
+  namespace: allagents-1
+spec:
+  selector:
+    matchLabels:
+      app: doaadmin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: doaadmin
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: "eks.amazonaws.com/nodegroup"
+                operator: In
+                values: ["workers-t3-medium"]
+      containers:
+      - name: pods-doaadmin-deployment
+        image: 056121157689.dkr.ecr.ap-south-1.amazonaws.com/doaadmin:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "0.5Gi"
+            cpu: "500m"
+          limits:
+            memory: "0.8Gi"
+            cpu: "800m"
+        volumeMounts:
+         - name: tkiet-production-data
+           mountPath: "/www/public/data"
+        env:
+        - name: PROVISIONER_NAME
+          value: efs-storage
+        - name: NFS_SERVER
+          value: 192.168.224.128
+        - name: NFS_PATH
+          value: /T01folder
+      volumes:
+      - name: tkiet-production-data
+        nfs:
+          server: 192.168.224.128
+          path: /
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doaadmin-service
+  namespace: allagents-1
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+spec:
+  selector:
+    app: doaadmin
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: https
+      port: 80
+      targetPort: 80
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: doaadmin-hpa
+  namespace: allagents-1
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: doaadmin-deployment
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
