@@ -1,8 +1,9 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: doaadmin-deployment
-  namespace: allagents-1
+  namespace: doaadmin
 spec:
   selector:
     matchLabels:
@@ -13,48 +14,38 @@ spec:
       labels:
         app: doaadmin
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: "eks.amazonaws.com/nodegroup"
-                operator: In
-                values: ["workers-t3-medium"]
       containers:
       - name: pods-doaadmin-deployment
-        image: 056121157689.dkr.ecr.ap-south-1.amazonaws.com/doaadmin:latest
+        image: localhost:32000/doaadmin:latest
         imagePullPolicy: Always
         resources:
           requests:
-            memory: "0.5Gi"
-            cpu: "500m"
+            memory: "1Gi"
+            cpu: "1000m"
           limits:
-            memory: "0.8Gi"
-            cpu: "800m"
+            memory: "1.8Gi"
+            cpu: "1800m"
         volumeMounts:
-         - name: tkiet-production-data
+         - name: doaadmin-production-data
            mountPath: "/www/public/data"
         env:
         - name: PROVISIONER_NAME
-          value: efs-storage
+          value: ksemin.in/nfs
         - name: NFS_SERVER
-          value: 192.168.224.128
+          value: 92.204.134.92
         - name: NFS_PATH
-          value: /T01folder
+          value: /
       volumes:
-      - name: tkiet-production-data
+      - name: doaadmin-production-data
         nfs:
-          server: 192.168.224.128
-          path: /
+          server: 92.204.134.92
+          path: /data/apps/doaadmin
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: doaadmin-service
-  namespace: allagents-1
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    name: doaadmin-service
+    namespace: doaadmin
 spec:
   selector:
     app: doaadmin
@@ -64,17 +55,43 @@ spec:
       name: https
       port: 80
       targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ name: doaadmin-in-ingress
+ namespace: doaadmin
+ annotations:
+   cert-manager.io/cluster-issuer: letsencrypt
+spec:
+ ingressClassName: public
+ tls:
+ - hosts:
+   - doaadmin.bynaricexam.com
+   secretName: doaadmin-in-ingress-tls
+ rules:
+ - host: doaadmin.bynaricexam.com
+   http:
+     paths:
+     - backend:
+         service:
+           name: doaadmin-service
+           port:
+             number: 80
+       path: /
+       pathType: Prefix
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: doaadmin-hpa
-  namespace: allagents-1
+  namespace: doaadmin
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: doaadmin-deployment
   minReplicas: 1
-  maxReplicas: 2
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 70
