@@ -1,4 +1,4 @@
 <?php
 return array(
-    'PROJURL'       => 'https://doa.bynaricexam.com',
+    'PROJURL' => 'https://doaadmin.bynaricexam.com',
 );
