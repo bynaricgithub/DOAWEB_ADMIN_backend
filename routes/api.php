@@ -103,4 +103,4 @@ Route::middleware(['auth:api'])->group(function () {
 
 });
 
-
+//Route::post('/news', [NewController::class, 'store']);

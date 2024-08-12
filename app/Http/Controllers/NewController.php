@@ -39,9 +39,7 @@ class NewController extends Controller
             $validator = Validator::make($input, [
                 "date" => "required",
                 "heading" => "required",
-                "url"=> "required",
                 "type" => "required",
-                "status"=> "required",
                 "fromDate" => "required|date",
                 "toDate" => "required|date",
                 
@@ -52,6 +50,29 @@ class NewController extends Controller
                     'message'   => $validator->errors()->first()
                 ], 400);
             }
+            if($request->type == 1)
+            {
+                $validator = Validator::make($input, [
+                      "file"=> "required", 
+                    ]);     
+                    if ($validator->fails()) {
+                        return response()->json([
+                            'status'     => 'failure',
+                            'message'   => $validator->errors()->first()
+                        ], 400);
+                    }
+            }else{
+                $validator = Validator::make($input, [
+                    "url"=> "required", 
+                  ]);     
+                  if ($validator->fails()) {
+                      return response()->json([
+                          'status'     => 'failure',
+                          'message'   => $validator->errors()->first()
+                      ], 400);
+                  }
+
+            }
             $path           = public_path() . '/data/news/';
             $record = [
                 'heading' => $request->heading,
@@ -60,22 +81,34 @@ class NewController extends Controller
                 'date' => $request->date,
                 'url'=> $request->url,
                 'type'=> $request->type,
-                'status'=> $request->status,
             ];
             if ($request->type == 2) {
                 $record['url'] = $request->url;
             }
+            //Log::info('Request Data: ', $request->all());
+            $file = $request->file('file');
+            //Log::info('Request Data: ',  $request->all());die();
             $result = News::create($record);
             if ($result) {
                 if ($request->type == 1) {
-                    // $extension = File::extension($request->file->getClientOriginalName());
-
-                    // $file          = 'Doc_' . $result->id . '.' . $extension;
-                    // $serverPath     = Config::get('constants.PROJURL') . '/data/news/' . $file;
-                    // File::ensureDirectoryExists($path);
-                    // $request->file->move($path, $file);
-                    // $result->url = $serverPath;
-                    $result->save();
+                    if ($request->hasFile('file')) {
+                        $file = $request->file('file');
+                        $extension = $file->getClientOriginalExtension();
+                    
+                        $fileName = 'Doc_' . $result->id . '.' . $extension;
+                        $serverPath = Config::get('constants.PROJURL') . '/data/news/' . $fileName;
+                    
+                        File::ensureDirectoryExists($path);
+                        $file->move($path, $fileName);
+                    
+                        $result->url = $serverPath;
+                        $result->save();
+                    } else {
+                        return response()->json([
+                            'status' => 'failure',
+                            'message' => 'No file uploaded or file upload failed.'
+                        ], 400);
+                    }
                 }
 
                 return response()->json([
@@ -142,7 +175,6 @@ class NewController extends Controller
             "heading" => "required",
             "url"=> "required",
             "type" => "required",
-            "status"=> "required",
             "fromDate" => "required|date",
             "toDate" => "required|date",
             
@@ -161,7 +193,6 @@ class NewController extends Controller
             $result->heading = $input['heading'];
             $result->url = $input['url'];
             $result->type =  $input['type'];
-            $result->status = $input['status'];
             $result->fromDate = $input['fromDate'];
             $result->toDate = $input['toDate'];
            
@@ -172,14 +203,24 @@ class NewController extends Controller
 
             if ($result->save()) {
                 if ($input['type'] == 1) {
-                    // $extension = File::extension($request->file->getClientOriginalName());
-
-                    // $file          = 'Doc_' . $result->id . '.' . $extension;
-                    // $serverPath     = Config::get('constants.PROJURL') . '/data/news/' . $file;
-                    // File::ensureDirectoryExists($path);
-                    // $request->file->move($path, $file);
-                    // $result->url = $serverPath;
-                    $result->save();
+                    if ($request->hasFile('file')) {
+                        $file = $request->file('file');
+                        $extension = $file->getClientOriginalExtension();
+                    
+                        $fileName = 'Doc_' . $result->id . '.' . $extension;
+                        $serverPath = Config::get('constants.PROJURL') . '/data/news/' . $fileName;
+                    
+                        File::ensureDirectoryExists($path);
+                        $file->move($path, $fileName);
+                    
+                        $result->url = $serverPath;
+                        $result->save();
+                    } else {
+                        return response()->json([
+                            'status' => 'failure',
+                            'message' => 'No file uploaded or file upload failed.'
+                        ], 400);
+                    }
                 }
                 return response()->json([
                     'status'     => 'success',
