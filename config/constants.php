@@ -1,4 +1,4 @@
 <?php
 return array(
-    'PROJURL' => 'http://localhost:8000',
+    'PROJURL' => 'https://doaadmin.bynaricexam.com',
 );
