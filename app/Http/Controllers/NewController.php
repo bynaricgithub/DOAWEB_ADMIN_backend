@@ -40,8 +40,8 @@ class NewController extends Controller
                 "date" => "required",
                 "heading" => "required",
                 "type" => "required",
-                "fromDate" => "required|date",
-                "toDate" => "required|date",
+                // "fromDate" => "required|date",
+                // "toDate" => "required|date",
                 
             ]);
             if ($validator->fails()) {
@@ -76,10 +76,10 @@ class NewController extends Controller
             $path           = public_path() . '/data/news/';
             $record = [
                 'heading' => $request->heading,
-                'fromDate' => $request->fromDate,
-                'toDate' => $request->toDate,
+                // 'fromDate' => $request->fromDate,
+                // 'toDate' => $request->toDate,
                 'date' => $request->date,
-                'url'=> $request->url,
+                // 'url'=> $request->url,
                 'type'=> $request->type,
             ];
             if ($request->type == 2) {
@@ -168,15 +168,16 @@ class NewController extends Controller
     public function edit(Request $request)
     {
        
-       $input = is_array($request) ? $request : $request->all();
+        $input = $request->all();
+        // Log::info('Request Data: ',  $input);
         try {
           $validator = Validator::make($input, [
-            "date" => "required|date",
+            "date" => "required",
             "heading" => "required",
             "url"=> "required",
             "type" => "required",
-            "fromDate" => "required|date",
-            "toDate" => "required|date",
+            // "fromDate" => "required|date",
+            // "toDate" => "required|date",
             
         ]);
             if ($validator->fails()) {
@@ -191,10 +192,10 @@ class NewController extends Controller
             $result = News::where('id', $input['id'])->first();
             $result->date =    $input['date'];
             $result->heading = $input['heading'];
-            $result->url = $input['url'];
+            // $result->url = $input['url'];
             $result->type =  $input['type'];
-            $result->fromDate = $input['fromDate'];
-            $result->toDate = $input['toDate'];
+            // $result->fromDate = $input['fromDate'];
+            // $result->toDate = $input['toDate'];
            
 
             if ($input['type'] == 2) {

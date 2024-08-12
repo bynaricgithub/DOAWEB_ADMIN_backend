@@ -98,7 +98,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/news', [NewController::class, 'index']);
     Route::post('/news', [NewController::class, 'store']);
     Route::delete('/news/{id}', [NewController::class, 'delete']);
-    Route::put('/news/edit', [NewController::class, 'edit']);
+    Route::post('/news/edit', [NewController::class, 'edit']);
     /*   Add news api end code here*/
 
 });
