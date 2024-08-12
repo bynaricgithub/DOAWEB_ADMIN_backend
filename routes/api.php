@@ -12,6 +12,7 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\EventVidController;
 use App\Http\Controllers\HomemenuController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\NewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,9 @@ Route::post('login', [AuthController::class, 'login'])->name('postlogin');
 Route::middleware(['auth:api'])->group(function () {
     Route::get('whoAmI', [AuthController::class, 'index'])->name('whoAmI');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+   
+    
 
     Route::get('/latestUpdates', [LatestUpdateController::class, 'index']);
     Route::post('/latestUpdates', [LatestUpdateController::class, 'store']);
@@ -89,4 +93,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/search', [ImpLinksController::class, 'search']);
 
     Route::get('/map', [MapController::class, 'index']);
+
+     /*   Add news api start code here*/
+    Route::get('/news', [NewController::class, 'index']);
+    Route::post('/news', [NewController::class, 'store']);
+    Route::delete('/news/{id}', [NewController::class, 'delete']);
+    Route::put('/news/edit', [NewController::class, 'edit']);
+    /*   Add news api end code here*/
+
 });
+
+
