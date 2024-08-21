@@ -36,8 +36,8 @@ class EventsController extends Controller
             $input = $request->all();
             $validator = Validator::make($input, [
                 "file" => "required",
-                "name" => "required",
-                "description" => "required",
+                // "name" => "required",
+                // "description" => "required",
 
             ]);
             if ($validator->fails()) {
@@ -49,7 +49,7 @@ class EventsController extends Controller
             $name = $request->name;
             $extension      = File::extension($request->file->getClientOriginalName());
             $path           = public_path() . '/data/events/';
-            $image          = 'Photo_' . str_replace(" ", "_", $name) . "." . $extension;
+            $image          = 'Photo_' . str_replace(" ", "_", time()) . "." . $extension;
             $serverPath     = Config::get('constants.PROJURL') . '/data/events/' . $image;
 
             File::ensureDirectoryExists($path);
@@ -144,7 +144,7 @@ class EventsController extends Controller
                 $image          = 'Photo_' . str_replace(" ", "_", $name) . '.' . $extension;
                 $serverPath     = Config::get('constants.PROJURL') . '/data/dignitaries/' . $image;
 
-                \File::ensureDirectoryExists($path);
+                File::ensureDirectoryExists($path);
                 $request->file->move($path, $image);
                 $result = Slider::where('id', $request->id)->update([
 
