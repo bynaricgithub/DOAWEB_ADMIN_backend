@@ -13,7 +13,7 @@ use App\Http\Controllers\EventVidController;
 use App\Http\Controllers\HomemenuController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\NewController;
-use App\Http\Controllers\Regional_officesController;
+use App\Http\Controllers\RegionalOfficeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -98,10 +98,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/news/edit', [NewController::class, 'edit']);
     /*   Add news api end code here*/
 
-    // Route::get('/events', [Regional_officesController::class, 'index']);
-    // Route::post('/events', [Regional_officesController::class, 'store']);
-    // Route::delete('/events', [Regional_officesController::class, 'delete']);
-    // Route::put('/events', [Regional_officesController::class, 'edit']);
+    Route::get('/regional-office', [RegionalOfficeController::class, 'index']);
+    Route::post('/regional-office', [RegionalOfficeController::class, 'store']);
+    Route::delete('/regional-office', [RegionalOfficeController::class, 'delete']);
+    Route::put('/regional-office', [RegionalOfficeController::class, 'edit']);
+    Route::post('/regional-office/disable', [RegionalOfficeController::class, 'disable']);
 });
 
 //Route::post('/news', [NewController::class, 'store']);

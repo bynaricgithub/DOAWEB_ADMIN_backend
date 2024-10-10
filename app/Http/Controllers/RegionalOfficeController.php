@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
 
-class Regional_officesController extends Controller
+class RegionalOfficeController extends Controller
+
 {
     public function index()
     {
         try {
-            $result = Regional_offices::get();
+            $result = Regional_offices::paginate(10);
             if ($result) {
                 return response()->json([
                     'status'     => 'success',
@@ -36,10 +37,10 @@ class Regional_officesController extends Controller
             $input = $request->all();
             $validator = Validator::make($input, [
                 "name" => "required",
-                "designation" => "required",
+                "post" => "required",
                 "email" => "required",
-                "image" => "required",
-
+                "img_path" => "required",
+                "region" => "required",
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -47,23 +48,25 @@ class Regional_officesController extends Controller
                     'message'   => $validator->errors()->first()
                 ], 400);
             }
-            $name = $request->name;
 
             $result = Regional_offices::create([
-                'name' => $name,
-                'designation' => $request->designation,
-                'img_path' => $request->image,
+                'name' => $request->name,
+                'post' => $request->post,
+                'email' => $request->email,
+                'img_path' => $request->img_path,
+                'region' => $request->region,
             ]);
+
             if ($result) {
                 return response()->json([
                     "status"          => "success",
-                    "message"         => "Event Photo Uploaded Successfully...",
+                    "message"         => "Regional officer Uploaded Successfully...",
                     "data" => $result
                 ], 200);
             } else {
                 return response()->json([
                     "status"          => "failure",
-                    "message"         => "Failed to add event photo",
+                    "message"         => "Failed to add Regional officer",
                 ], 400);
             }
         } catch (\Exception $e) {
@@ -115,8 +118,10 @@ class Regional_officesController extends Controller
             $validator = Validator::make($request->all(), [
                 "id" => "required",
                 "name" => "required",
-                "designation" => "required",
+                "post" => "required",
                 "email" => "required",
+                "img_path" => "required",
+                "region" => "required",
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -124,37 +129,18 @@ class Regional_officesController extends Controller
                     "message"         => $validator->errors()->first()
                 ], 400);
             }
-            $name = $request->name;
 
-
-            if (isset($request->file) && !empty($request->file)) {
-                $extension      = File::extension($request->file->getClientOriginalName());
-                $path           = public_path() . '/data/regionalOffices/';
-                $image          = 'Photo_' . str_replace(" ", "_", time()) . "." . $extension;
-                // $path           = public_path() . '/data/dignitaries/';
-                // $image          = 'Photo_' . str_replace(" ", "_", $name) . '.' . $extension;
-                $serverPath     = Config::get('constants.PROJURL') . '/data/dignitaries/' . $image;
-
-                File::ensureDirectoryExists($path);
-                $request->file->move($path, $image);
-                $result = Regional_offices::where('id', $request->id)->update([
-
-                    'name' => $name,
-                    'designation' => $request->designation,
-                    'img_path' => $serverPath,
-                ]);
-            } else {
-                $result = Regional_offices::where('id', $request->id)->update([
-
-                    'name' => $name,
-                    'designation' => $request->designation,
-
-                ]);
-            }
+            $result = Regional_offices::where('id', $request->id)->update([
+                'name' => $request->name,
+                'post' => $request->post,
+                'email' => $request->email,
+                'img_path' => $request->img_path,
+                'region' => $request->region,
+            ]);
 
             return response()->json([
                 "status"          => "success",
-                "message"         => "Dignitaries Photo Updated Successfully...",
+                "message"         => "Regional officers Updated Successfully...",
                 "data"            => Regional_offices::where('id', $request->id)->first(),
             ], 200);
         } catch (\Exception $e) {
@@ -185,7 +171,7 @@ class Regional_officesController extends Controller
                 return response()->json([
                     'status'     => 'success',
                     'data'   => $result,
-                    'message' =>  $request->id == 1 ? "Status enabled successfully" : "Status disabled successfully"
+                    'message' =>  $request->status == 1 ? "Status enabled successfully" : "Status disabled successfully"
                 ], 200);
             }
         } catch (\Exception $e) {
