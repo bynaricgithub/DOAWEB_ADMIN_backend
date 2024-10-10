@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class ImpLinks extends Model
 {
-  use HasFactory;
-  protected $guarded = [];
+    use HasFactory;
 
-  protected $table = 'impLinks';
-  public static $fields = ['id', 'heading', 'url', 'type', 'fromDate', 'toDate', 'created_at', 'updated_at'];
-  public static function getFields()
-  {
-    return ImpLinks::$fields;
-  }
+    protected $guarded = [];
+
+    protected $table = 'impLinks';
+
+    public static $fields = ['id', 'heading', 'url', 'type', 'fromDate', 'toDate', 'created_at', 'updated_at'];
+
+    public static function getFields()
+    {
+        return ImpLinks::$fields;
+    }
 }

@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\OauthAccessToken;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Validator;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Session;
-
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function index()
     {
         return response()->json([
-            "status"    =>  "success",
-            "data"      =>  Auth::user()
+            'status' => 'success',
+            'data' => Auth::user(),
         ], 200);
     }
 
@@ -37,26 +36,26 @@ class AuthController extends Controller
         );
         if ($validator->fails()) {
             return json_encode([
-                'status'                    =>  'failure',
-                'message'                     =>     $validator->errors()->first(),
+                'status' => 'failure',
+                'message' => $validator->errors()->first(),
             ], 200);
         }
 
-        $user_data = array(
-            'username'          => $username,
-            'password'             => $password,
-            'status'             => '1',
-            'role'                => 'ADMIN'
-        );
+        $user_data = [
+            'username' => $username,
+            'password' => $password,
+            'status' => '1',
+            'role' => 'ADMIN',
+        ];
 
         if (Auth::attempt($user_data)) {
             $AuthUser = Auth::user();
             $ip = $this->getIp();
-            $current_time             = Carbon::now();
-            $role                    = $AuthUser->role;
-            $user                     = $AuthUser;
-            $token                     = $user->createToken('msbteWeb')->accessToken;
-            $uid                       = $AuthUser->id;
+            $current_time = Carbon::now();
+            $role = $AuthUser->role;
+            $user = $AuthUser;
+            $token = $user->createToken('msbteWeb')->accessToken;
+            $uid = $AuthUser->id;
 
             $rres = Session::create([
                 'uid' => $uid,
@@ -69,28 +68,28 @@ class AuthController extends Controller
 
             if (strtoupper($role) == 'ADMIN') {
                 return response()->json([
-                    'status'         => 'success',
-                    'token'         => $token,
-                    'data'             => $AuthUser,
+                    'status' => 'success',
+                    'token' => $token,
+                    'data' => $AuthUser,
                 ], 200);
             } else {
                 return response()->json([
-                    'status'         => 'failure',
-                    'message'        => 'Unauthorized User...',
+                    'status' => 'failure',
+                    'message' => 'Unauthorized User...',
                 ], 200);
             }
         } else {
 
             return response()->json([
-                'status'         => 'failure',
-                'message'        => 'Invalid Login Credentials',
+                'status' => 'failure',
+                'message' => 'Invalid Login Credentials',
             ], 400);
         }
     }
 
     public function getIp()
     {
-        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+        foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
             if (array_key_exists($key, $_SERVER) === true) {
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip);
@@ -100,6 +99,7 @@ class AuthController extends Controller
                 }
             }
         }
+
         return request()->ip();
     }
 
@@ -107,20 +107,20 @@ class AuthController extends Controller
     {
         try {
             $AuthUser = Auth::user();
-            $current_time                  = Carbon::now();
-            $result                         = Session::select(['endtime', 'uid', 'id'])->where('uid', $AuthUser->id)->orderBy('id', 'DESC')->first()->update(['endtime'     => $current_time]);
+            $current_time = Carbon::now();
+            $result = Session::select(['endtime', 'uid', 'id'])->where('uid', $AuthUser->id)->orderBy('id', 'DESC')->first()->update(['endtime' => $current_time]);
             $result = OauthAccessToken::select(['id', 'user_id', 'revoked', 'created_at'])->where('user_id', $AuthUser->id)->orderBy('created_at', 'DESC')->first();
             $result->revoked = '1';
             $result->save();
 
             return response()->json([
-                'status'         => 'success',
-                'message'        => 'User Logged out Successfully...',
+                'status' => 'success',
+                'message' => 'User Logged out Successfully...',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'status'         => 'failure',
-                'message'        => 'Problem Logging Out...Error:' . $e->getMessage(),
+                'status' => 'failure',
+                'message' => 'Problem Logging Out...Error:'.$e->getMessage(),
             ], 400);
         }
     }

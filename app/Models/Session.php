@@ -10,7 +10,9 @@ class Session extends Model
     use HasFactory;
 
     protected $table = 'sessions';
-    public static $fields = ['id','uid','role','ip','starttime','endtime','created_at','updated_at'];
+
+    public static $fields = ['id', 'uid', 'role', 'ip', 'starttime', 'endtime', 'created_at', 'updated_at'];
+
     protected $guarded = [];
 
     protected $primaryKey = 'id';

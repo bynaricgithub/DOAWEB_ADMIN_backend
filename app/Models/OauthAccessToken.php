@@ -10,8 +10,11 @@ class OauthAccessToken extends Model
     use HasFactory;
 
     protected $table = 'oauth_access_tokens';
-    public static $fields = ['id','user_id','client_id','name','scopes','revoked','created_at','updated_at','expires_at'];
+
+    public static $fields = ['id', 'user_id', 'client_id', 'name', 'scopes', 'revoked', 'created_at', 'updated_at', 'expires_at'];
+
     protected $guarded = [];
+
     public static function getFields()
     {
         return OauthAccessToken::$fields;

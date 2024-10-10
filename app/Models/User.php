@@ -10,18 +10,22 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
+    use HasApiTokens;
     use HasFactory;
+    use Notifiable;
+    use HasFactory;
+
     protected $guarded = [];
 
     protected $table = 'users';
-    public static $fields = ['id', 'username','password','role','status','created_at','updated_at'];
+
+    public static $fields = ['id', 'username', 'password', 'role', 'status', 'created_at', 'updated_at'];
+
     public static function getFields()
     {
-      return User::$fields;
+        return User::$fields;
     }
-   
+
     protected $hidden = [
         'password',
     ];

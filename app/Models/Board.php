@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Board extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     protected $table = 'board';
-    public static $fields = ["id", "name", "post", "description", "status"];
+
+    public static $fields = ['id', 'name', 'post', 'description', 'status'];
+
     public static function getFields()
     {
         return Board::$fields;

@@ -13,6 +13,7 @@ use App\Http\Controllers\EventVidController;
 use App\Http\Controllers\HomemenuController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\NewController;
+use App\Http\Controllers\Regional_officesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,9 +23,6 @@ Route::post('login', [AuthController::class, 'login'])->name('postlogin');
 Route::middleware(['auth:api'])->group(function () {
     Route::get('whoAmI', [AuthController::class, 'index'])->name('whoAmI');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
-   
-    
 
     Route::get('/latestUpdates', [LatestUpdateController::class, 'index']);
     Route::post('/latestUpdates', [LatestUpdateController::class, 'store']);
@@ -55,6 +53,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/events', [EventsController::class, 'store']);
     Route::delete('/events', [EventsController::class, 'delete']);
     Route::put('/events', [EventsController::class, 'edit']);
+    Route::post('/events/update', [EventsController::class, 'edit']);
+    Route::post('/events/disable', [EventsController::class, 'disable']);
 
     Route::get('/Officers', [OfficersController::class, 'index']);
     Route::post('/Officers', [OfficersController::class, 'store']);
@@ -86,21 +86,22 @@ Route::middleware(['auth:api'])->group(function () {
     Route::put('/homemenu', [HomemenuController::class, 'edit']);
     Route::post('/homemenu/disable', [HomemenuController::class, 'disable']);
 
-    Route::post('/events/update', [EventsController::class, 'edit']);
-    Route::post('/events/disable', [EventsController::class, 'disable']);
-
     Route::get('/search', [CircularController::class, 'search']);
     Route::get('/search', [ImpLinksController::class, 'search']);
 
     Route::get('/map', [MapController::class, 'index']);
 
-     /*   Add news api start code here*/
+    /*   Add news api start code here*/
     Route::get('/news', [NewController::class, 'index']);
     Route::post('/news', [NewController::class, 'store']);
-    Route::delete('/news/{id}', [NewController::class, 'delete']);
+    Route::delete('/news', [NewController::class, 'delete']);
     Route::post('/news/edit', [NewController::class, 'edit']);
     /*   Add news api end code here*/
 
+    // Route::get('/events', [Regional_officesController::class, 'index']);
+    // Route::post('/events', [Regional_officesController::class, 'store']);
+    // Route::delete('/events', [Regional_officesController::class, 'delete']);
+    // Route::put('/events', [Regional_officesController::class, 'edit']);
 });
 
 //Route::post('/news', [NewController::class, 'store']);
